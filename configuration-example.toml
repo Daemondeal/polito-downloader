@@ -1,0 +1,13 @@
+[download]
+download_path = "./download"
+
+[login]
+username = "s112233"
+password = "your-password-here"
+
+[[courses]]
+name = "Underwater Basket Weaving"
+ignore = ["Very Large Files"]
+
+[[courses]]
+name = "Chemistry"

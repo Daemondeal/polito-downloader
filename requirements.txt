@@ -1,0 +1,4 @@
+requests
+tqdm
+types-tqdm
+types-requests
