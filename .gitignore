@@ -4,8 +4,8 @@ api-spec/
 configuration.toml
 persistent_state.json
 download/
-logs/*
-!logs
+/logs/**
+!/logs/**
 
 
 # Byte-compiled / optimized / DLL files
