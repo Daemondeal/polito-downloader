@@ -8,6 +8,7 @@ password = "your-password-here"
 [[courses]]
 name = "Underwater Basket Weaving"
 ignore = ["Very Large Files"]
+download_virtual_classroom = true
 
 [[courses]]
 name = "Chemistry"

@@ -101,6 +101,9 @@ class PolitoSession:
     def files(self, course_id: int):
         return self._fetch_from_api(f"{ApiUrl.COURSES}/{course_id}/files")
 
+    def download_lecture(self, lecture: dict, destination: str):
+        return self._download_file(lecture["videoUrl"], destination)
+
     def download_file(self, course_id: int, file_id: int, destination: str):
         return self._download_file(
             f"{ApiUrl.COURSES}/{course_id}/files/{file_id}", destination

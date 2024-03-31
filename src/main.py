@@ -3,7 +3,7 @@ import logging.config
 import json
 
 from errors import ApiException
-from downloader import CourseDownloader
+from downloader import CourseDownloader, VirtualClassroomDownloader
 from polito_session import PolitoSession
 from config import Configuration, PersistentState, parse_configuration
 
@@ -30,7 +30,8 @@ def main():
 
     log.info("logging in...")
     try:
-        login_result = session.login(config.username, config.password, state.client_id)
+        login_result = session.login(
+            config.username, config.password, state.client_id)
     except ApiException as e:
         if e.code == 401:
             log.error("invalid login credentials")
@@ -52,15 +53,28 @@ def main():
         if course["name"] in config.courses:
             log.info(f"downloading course {course['name']}")
 
+            course_config = config.courses[course["name"]]
+
             downloader = CourseDownloader(
                 session=session,
                 config=config,
                 course_name=course["name"],
                 course_id=course["id"],
-                ignore=config.courses[course["name"]].ignore,
+                ignore=course_config.ignore,
             )
 
             downloader.download_files()
+
+            if course_config.should_download_virtual_classroom:
+                log.info(f"downloading virtual classroom for course {course['name']}")
+                vc_downloader = VirtualClassroomDownloader(
+                    session=session,
+                    config=config,
+                    course_name=course["name"],
+                    course_id=course["id"],
+                )
+
+                vc_downloader.download_lectures()
 
             log.info("done!")
 

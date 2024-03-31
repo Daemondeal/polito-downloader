@@ -13,6 +13,7 @@ log = logging.getLogger("polito_downloader")
 class Course:
     name: str
     ignore: list[str]
+    should_download_virtual_classroom: bool
 
 
 @dataclass
@@ -66,12 +67,19 @@ def parse_configuration() -> Configuration:
     verbose = configs.verbose
 
     if configs.course is not None:
-        courses = {configs.course: Course(name=configs.course, ignore=[])}
+        courses = {
+            configs.course: Course(
+                name=configs.course,
+                ignore=[],
+                should_download_virtual_classroom=False)
+        }
+
     elif "courses" in defaults:
         courses = {
             course["name"]: Course(
                 name=course["name"],
                 ignore=([] if "ignore" not in course else course["ignore"]),
+                should_download_virtual_classroom=course.get("download_virtual_classroom") == True
             )
             for course in defaults["courses"]
         }
