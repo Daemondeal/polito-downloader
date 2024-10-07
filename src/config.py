@@ -1,5 +1,5 @@
 import argparse
-import tomllib
+import toml
 import logging
 import json
 
@@ -31,8 +31,8 @@ def missing_argument(message: str):
 
 
 def parse_configuration() -> Configuration:
-    with open("configuration.toml", "rb") as toml_config:
-        defaults = tomllib.load(toml_config)
+    with open("configuration.toml", "r") as toml_config:
+        defaults = toml.load(toml_config)
 
     parser = argparse.ArgumentParser(
         prog="polito_downloader", description="a downloader for polito courses files"
@@ -69,9 +69,8 @@ def parse_configuration() -> Configuration:
     if configs.course is not None:
         courses = {
             configs.course: Course(
-                name=configs.course,
-                ignore=[],
-                should_download_virtual_classroom=False)
+                name=configs.course, ignore=[], should_download_virtual_classroom=False
+            )
         }
 
     elif "courses" in defaults:
@@ -79,7 +78,10 @@ def parse_configuration() -> Configuration:
             course["name"]: Course(
                 name=course["name"],
                 ignore=([] if "ignore" not in course else course["ignore"]),
-                should_download_virtual_classroom=course.get("download_virtual_classroom") == True
+                should_download_virtual_classroom=course.get(
+                    "download_virtual_classroom"
+                )
+                == True,
             )
             for course in defaults["courses"]
         }

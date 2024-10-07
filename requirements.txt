@@ -2,3 +2,4 @@ requests
 tqdm
 types-tqdm
 types-requests
+toml
