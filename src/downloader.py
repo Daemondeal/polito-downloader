@@ -74,11 +74,35 @@ class VirtualClassroomDownloader:
             self.already_downloaded = {}
 
         for lecture in lectures:
-            ext = lecture["videoUrl"].split(".")[-1]
-            file_name = _clean_filename(lecture['title'])
+            head_response = self.session.get_response_header(lecture["videoUrl"])
+            if head_response.status_code != 200:
+                log.warn(
+                    f"Couldn't get headers from lecture {lecture['title']}, skipping..."
+                )
+                continue
+
+            if "content-type" not in head_response.headers:
+                log.warn(
+                    f"Lecture {lecture['title']} has no specified header, skipping..."
+                )
+                continue
+
+            content_type = head_response.headers["content-type"]
+
+            ext = ""
+            if content_type == "video/mp4":
+                ext = "mp4"
+            if content_type != "video/mp4":
+                log.warn(f"Content type {content_type} not supported, skipping...")
+                continue
+
+            file_name = _clean_filename(lecture["title"])
             dest = path.join(course_path, f"{file_name}.{ext}")
-            id = str(lecture['id'])
-            if id in self.already_downloaded and self.already_downloaded[id] == lecture["createdAt"]:
+            id = str(lecture["id"])
+            if (
+                id in self.already_downloaded
+                and self.already_downloaded[id] == lecture["createdAt"]
+            ):
                 log.debug(f"skipping {dest}")
                 continue
 

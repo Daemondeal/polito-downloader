@@ -65,6 +65,9 @@ class PolitoSession:
     def logout(self):
         self.session.delete(ApiUrl.LOGOUT, headers=self.headers())
 
+    def get_response_header(self, url: str):
+        return self.session.head(url)
+
     def _fetch_from_api(self, url: str):
         if self.token == "":
             raise ApiException("Cannot make request before login")
