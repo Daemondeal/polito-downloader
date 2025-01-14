@@ -30,8 +30,7 @@ def main():
 
     log.info("logging in...")
     try:
-        login_result = session.login(
-            config.username, config.password, state.client_id)
+        login_result = session.login(config.username, config.password, state.client_id)
     except ApiException as e:
         if e.code == 401:
             log.error("invalid login credentials")
@@ -74,7 +73,9 @@ def main():
                     course_id=course["id"],
                 )
 
-                vc_downloader.download_lectures()
+                vc_downloader.download_lectures(
+                    course_config.should_download_videolectures
+                )
 
             log.info("done!")
 

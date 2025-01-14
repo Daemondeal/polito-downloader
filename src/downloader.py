@@ -50,8 +50,11 @@ class VirtualClassroomDownloader:
         self.course_name = course_name
         self.course_id = course_id
 
-    def download_lectures(self):
-        lectures = self.session.virtual_classrooms(self.course_id)["data"]
+    def download_lectures(self, is_videolecture: bool):
+        if is_videolecture:
+            lectures = self.session.videolectures(self.course_id)["data"]
+        else:
+            lectures = self.session.virtual_classrooms(self.course_id)["data"]
 
         root_path = path.join(
             self.config.courses_path, _convert_course_name(self.course_name)

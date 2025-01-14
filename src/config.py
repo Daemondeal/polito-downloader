@@ -14,6 +14,7 @@ class Course:
     name: str
     ignore: list[str]
     should_download_virtual_classroom: bool
+    should_download_videolectures: bool
 
 
 @dataclass
@@ -69,7 +70,10 @@ def parse_configuration() -> Configuration:
     if configs.course is not None:
         courses = {
             configs.course: Course(
-                name=configs.course, ignore=[], should_download_virtual_classroom=False
+                name=configs.course,
+                ignore=[],
+                should_download_virtual_classroom=False,
+                should_download_videolectures=False,
             )
         }
 
@@ -82,6 +86,7 @@ def parse_configuration() -> Configuration:
                     "download_virtual_classroom"
                 )
                 == True,
+                should_download_videolectures=course.get("videolectures") == True,
             )
             for course in defaults["courses"]
         }
